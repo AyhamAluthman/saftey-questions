@@ -1,0 +1,382 @@
+{
+  "info": {
+    "name": "HSE Quiz API - اختبار الصحة والسلامة والبيئة",
+    "description": "مجموعة طلبات API الخاصة بباك اند اختبار الصحة والسلامة والبيئة (HSE). تشمل التصنيفات، الأسئلة، التحقق من اسم المتقدّم، وإرسال الاختبار.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Get All Categories",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/json" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/categories",
+          "host": ["{{base_url}}"],
+          "path": ["api", "categories"]
+        },
+        "description": "إرجاع كل تصنيفات الأسئلة (طاقة، بيئة، طريق، حرائق) مع عدد الأسئلة في كل تصنيف."
+      },
+      "response": [
+        {
+          "name": "200 OK",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/categories",
+              "host": ["{{base_url}}"],
+              "path": ["api", "categories"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            { "key": "Content-Type", "value": "application/json" }
+          ],
+          "body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"name\": \"سلامتك مع الطاقة\",\n      \"slug\": \"energy\",\n      \"icon\": \"bolt\",\n      \"order\": 1,\n      \"questions_count\": 4\n    },\n    {\n      \"id\": 2,\n      \"name\": \"سلامتك مع البيئة\",\n      \"slug\": \"environment\",\n      \"icon\": \"leaf\",\n      \"order\": 2,\n      \"questions_count\": 4\n    },\n    {\n      \"id\": 3,\n      \"name\": \"السلامة في الطريق\",\n      \"slug\": \"road\",\n      \"icon\": \"car\",\n      \"order\": 3,\n      \"questions_count\": 3\n    },\n    {\n      \"id\": 4,\n      \"name\": \"سلامتك مع الحرائق\",\n      \"slug\": \"fire\",\n      \"icon\": \"fire\",\n      \"order\": 4,\n      \"questions_count\": 3\n    }\n  ]\n}"
+        }
+      ]
+    },
+    {
+      "name": "Get Questions By Category",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/json" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/categories/energy/questions",
+          "host": ["{{base_url}}"],
+          "path": ["api", "categories", "energy", "questions"]
+        },
+        "description": "إرجاع أسئلة تصنيف واحد فقط (بدون إظهار الإجابة الصحيحة). استبدل \"energy\" بأي slug آخر: environment, road, fire."
+      },
+      "response": [
+        {
+          "name": "200 OK",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/categories/energy/questions",
+              "host": ["{{base_url}}"],
+              "path": ["api", "categories", "energy", "questions"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            { "key": "Content-Type", "value": "application/json" }
+          ],
+          "body": "{\n  \"category\": {\n    \"id\": 1,\n    \"name\": \"سلامتك مع الطاقة\",\n    \"slug\": \"energy\"\n  },\n  \"data\": [\n    {\n      \"id\": 1,\n      \"question\": \"هل يجوز لمس الأجهزة الكهربائية واليدان مبللتان؟\",\n      \"options\": [\"نعم\", \"لا\"]\n    },\n    {\n      \"id\": 2,\n      \"question\": \"ماذا تفعل إذا رأيت سلكاً كهربائياً مكشوفاً؟\",\n      \"options\": [\"ألمسه لأتأكد\", \"أبتعد عنه وأبلغ المختصين\"]\n    },\n    {\n      \"id\": 3,\n      \"question\": \"هل يجوز تحميل المشترك الكهربائي بأجهزة كثيرة تفوق قدرته؟\",\n      \"options\": [\"نعم\", \"لا\"]\n    },\n    {\n      \"id\": 4,\n      \"question\": \"أي خيار يساعد على تقليل استهلاك الطاقة؟\",\n      \"options\": [\"ترك الإنارة تعمل دون حاجة\", \"إطفاء الأجهزة والإنارة عند عدم استخدامها\"]\n    }\n  ]\n}"
+        },
+        {
+          "name": "404 Not Found (slug غير موجود)",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/categories/unknown/questions",
+              "host": ["{{base_url}}"],
+              "path": ["api", "categories", "unknown", "questions"]
+            }
+          },
+          "status": "Not Found",
+          "code": 404,
+          "_postman_previewlanguage": "json",
+          "header": [
+            { "key": "Content-Type", "value": "application/json" }
+          ],
+          "body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\Category].\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Get All Questions (Full Quiz)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/json" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/questions",
+          "host": ["{{base_url}}"],
+          "path": ["api", "questions"]
+        },
+        "description": "إرجاع كل الأسئلة مجمّعة حسب التصنيف - تُستخدم لعرض الاختبار الكامل دفعة واحدة."
+      },
+      "response": [
+        {
+          "name": "200 OK",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/questions",
+              "host": ["{{base_url}}"],
+              "path": ["api", "questions"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            { "key": "Content-Type", "value": "application/json" }
+          ],
+          "body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"name\": \"سلامتك مع الطاقة\",\n      \"slug\": \"energy\",\n      \"questions\": [\n        {\n          \"id\": 1,\n          \"question\": \"هل يجوز لمس الأجهزة الكهربائية واليدان مبللتان؟\",\n          \"options\": [\"نعم\", \"لا\"]\n        },\n        {\n          \"id\": 2,\n          \"question\": \"ماذا تفعل إذا رأيت سلكاً كهربائياً مكشوفاً؟\",\n          \"options\": [\"ألمسه لأتأكد\", \"أبتعد عنه وأبلغ المختصين\"]\n        }\n      ]\n    },\n    {\n      \"id\": 2,\n      \"name\": \"سلامتك مع البيئة\",\n      \"slug\": \"environment\",\n      \"questions\": [\n        {\n          \"id\": 5,\n          \"question\": \"لماذا نحافظ على الأشجار والمساحات الخضراء؟\",\n          \"options\": [\"لتحسين البيئة وجودة الهواء ودعم التنوع الحيوي\", \"للزينة فقط\"]\n        }\n      ]\n    }\n  ]\n}"
+        }
+      ]
+    },
+    {
+      "name": "Check Single Answer",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Accept", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"selected_option\": 1\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/questions/1/answer",
+          "host": ["{{base_url}}"],
+          "path": ["api", "questions", "1", "answer"]
+        },
+        "description": "التحقق من صحة إجابة سؤال واحد. selected_option هو فهرس الخيار المختار (0-based)."
+      },
+      "response": [
+        {
+          "name": "200 OK - إجابة صحيحة",
+          "originalRequest": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"selected_option\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/questions/1/answer",
+              "host": ["{{base_url}}"],
+              "path": ["api", "questions", "1", "answer"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            { "key": "Content-Type", "value": "application/json" }
+          ],
+          "body": "{\n  \"question_id\": 1,\n  \"is_correct\": true,\n  \"correct_option\": 1,\n  \"explanation\": \"الماء موصل جيد للكهرباء، لذا يُمنع لمس الأجهزة الكهربائية باليدين المبللتين.\"\n}"
+        },
+        {
+          "name": "422 Validation Error",
+          "originalRequest": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/questions/1/answer",
+              "host": ["{{base_url}}"],
+              "path": ["api", "questions", "1", "answer"]
+            }
+          },
+          "status": "Unprocessable Entity",
+          "code": 422,
+          "_postman_previewlanguage": "json",
+          "header": [
+            { "key": "Content-Type", "value": "application/json" }
+          ],
+          "body": "{\n  \"message\": \"The selected option field is required.\",\n  \"errors\": {\n    \"selected_option\": [\"The selected option field is required.\"]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Check Applicant (existing result lookup)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/json" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/applicants/check?name=محمد أحمد",
+          "host": ["{{base_url}}"],
+          "path": ["api", "applicants", "check"],
+          "query": [
+            { "key": "name", "value": "محمد أحمد" }
+          ]
+        },
+        "description": "التحقق مما إذا كان المتقدّم قد أدّى الاختبار سابقاً بنفس الاسم. إن وُجدت نتيجة سابقة تُرجع كاملة، وإلا data تكون null."
+      },
+      "response": [
+        {
+          "name": "200 OK - يوجد نتيجة سابقة",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/applicants/check?name=محمد أحمد",
+              "host": ["{{base_url}}"],
+              "path": ["api", "applicants", "check"],
+              "query": [{ "key": "name", "value": "محمد أحمد" }]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            { "key": "Content-Type", "value": "application/json" }
+          ],
+          "body": "{\n  \"data\": {\n    \"attempt_id\": 3,\n    \"applicant_name\": \"محمد أحمد\",\n    \"taken_at\": \"2026-08-19T10:00:00+00:00\",\n    \"score\": 10,\n    \"total\": 14,\n    \"percentage\": 71.4,\n    \"results\": [\n      {\n        \"question_id\": 1,\n        \"is_correct\": true,\n        \"correct_option\": 1,\n        \"explanation\": \"الماء موصل جيد للكهرباء، لذا يُمنع لمس الأجهزة الكهربائية باليدين المبللتين.\"\n      },\n      {\n        \"question_id\": 2,\n        \"is_correct\": false,\n        \"correct_option\": 1,\n        \"explanation\": \"يجب الابتعاد فوراً عن أي سلك مكشوف وإبلاغ الجهة المختصة دون التعرض له.\"\n      }\n    ]\n  }\n}"
+        },
+        {
+          "name": "200 OK - لا يوجد نتيجة سابقة",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/applicants/check?name=اسم جديد",
+              "host": ["{{base_url}}"],
+              "path": ["api", "applicants", "check"],
+              "query": [{ "key": "name", "value": "اسم جديد" }]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            { "key": "Content-Type", "value": "application/json" }
+          ],
+          "body": "{\n  \"data\": null\n}"
+        },
+        {
+          "name": "422 Validation Error (اسم قصير جداً)",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/applicants/check?name=م",
+              "host": ["{{base_url}}"],
+              "path": ["api", "applicants", "check"],
+              "query": [{ "key": "name", "value": "م" }]
+            }
+          },
+          "status": "Unprocessable Entity",
+          "code": 422,
+          "_postman_previewlanguage": "json",
+          "header": [
+            { "key": "Content-Type", "value": "application/json" }
+          ],
+          "body": "{\n  \"message\": \"The name field must be at least 2 characters.\",\n  \"errors\": {\n    \"name\": [\"The name field must be at least 2 characters.\"]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Submit Quiz",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Accept", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"applicant_name\": \"محمد أحمد\",\n  \"answers\": [\n    { \"question_id\": 1, \"selected_option\": 1 },\n    { \"question_id\": 2, \"selected_option\": 1 },\n    { \"question_id\": 3, \"selected_option\": 0 },\n    { \"question_id\": 4, \"selected_option\": 1 }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/quiz/submit",
+          "host": ["{{base_url}}"],
+          "path": ["api", "quiz", "submit"]
+        },
+        "description": "تصحيح إجابات الاختبار كاملة، حفظها باسم المتقدّم في applicant_name، وإرجاع النتيجة النهائية مع تفاصيل كل سؤال."
+      },
+      "response": [
+        {
+          "name": "200 OK",
+          "originalRequest": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"applicant_name\": \"محمد أحمد\",\n  \"answers\": [\n    { \"question_id\": 1, \"selected_option\": 1 },\n    { \"question_id\": 2, \"selected_option\": 1 },\n    { \"question_id\": 3, \"selected_option\": 0 },\n    { \"question_id\": 4, \"selected_option\": 1 }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/quiz/submit",
+              "host": ["{{base_url}}"],
+              "path": ["api", "quiz", "submit"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            { "key": "Content-Type", "value": "application/json" }
+          ],
+          "body": "{\n  \"attempt_id\": 3,\n  \"applicant_name\": \"محمد أحمد\",\n  \"taken_at\": \"2026-08-19T10:00:00+00:00\",\n  \"score\": 3,\n  \"total\": 4,\n  \"percentage\": 75.0,\n  \"results\": [\n    {\n      \"question_id\": 1,\n      \"is_correct\": true,\n      \"correct_option\": 1,\n      \"explanation\": \"الماء موصل جيد للكهرباء، لذا يُمنع لمس الأجهزة الكهربائية باليدين المبللتين.\"\n    },\n    {\n      \"question_id\": 2,\n      \"is_correct\": true,\n      \"correct_option\": 1,\n      \"explanation\": \"يجب الابتعاد فوراً عن أي سلك مكشوف وإبلاغ الجهة المختصة دون التعرض له.\"\n    },\n    {\n      \"question_id\": 3,\n      \"is_correct\": false,\n      \"correct_option\": 1,\n      \"explanation\": \"تحميل المشترك الكهربائي فوق طاقته قد يسبب سخونة الأسلاك واندلاع حريق.\"\n    },\n    {\n      \"question_id\": 4,\n      \"is_correct\": true,\n      \"correct_option\": 1,\n      \"explanation\": \"إطفاء الأجهزة والإنارة غير المستخدمة يقلل استهلاك الطاقة ويحد من الهدر.\"\n    }\n  ]\n}"
+        },
+        {
+          "name": "422 Validation Error (بدون applicant_name)",
+          "originalRequest": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"answers\": [\n    { \"question_id\": 1, \"selected_option\": 1 }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/quiz/submit",
+              "host": ["{{base_url}}"],
+              "path": ["api", "quiz", "submit"]
+            }
+          },
+          "status": "Unprocessable Entity",
+          "code": 422,
+          "_postman_previewlanguage": "json",
+          "header": [
+            { "key": "Content-Type", "value": "application/json" }
+          ],
+          "body": "{\n  \"message\": \"The applicant name field is required.\",\n  \"errors\": {\n    \"applicant_name\": [\"The applicant name field is required.\"]\n  }\n}"
+        },
+        {
+          "name": "422 Validation Error (question_id غير موجود)",
+          "originalRequest": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"applicant_name\": \"محمد أحمد\",\n  \"answers\": [\n    { \"question_id\": 9999, \"selected_option\": 1 }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/quiz/submit",
+              "host": ["{{base_url}}"],
+              "path": ["api", "quiz", "submit"]
+            }
+          },
+          "status": "Unprocessable Entity",
+          "code": 422,
+          "_postman_previewlanguage": "json",
+          "header": [
+            { "key": "Content-Type", "value": "application/json" }
+          ],
+          "body": "{\n  \"message\": \"The selected answers.question_id is invalid.\",\n  \"errors\": {\n    \"answers.0.question_id\": [\"The selected answers.0.question_id is invalid.\"]\n  }\n}"
+        }
+      ]
+    }
+  ]
+}

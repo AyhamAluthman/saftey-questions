@@ -15,5 +15,12 @@ export const routes: Routes = [
         (component) => component.QuestionnairePage
       )
   },
+  {
+    path: 'result',
+    loadComponent: () =>
+      import('./features/result/result.page').then(
+        (component) => component.ResultPage
+      )
+  },
   { path: '**', redirectTo: '' }
 ];
