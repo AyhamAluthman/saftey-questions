@@ -1,3 +1,24 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import 'tailwindcss';
+
+@theme {
+  --color-primary: #002623;
+}
+
+html {
+  background: #fafaf9;
+  font-family: Tahoma, Arial, sans-serif;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100dvh;
+  margin: 0;
+}
+
+button,
+input {
+  font: inherit;
+}
