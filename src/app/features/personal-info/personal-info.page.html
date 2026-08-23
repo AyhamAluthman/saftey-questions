@@ -1,181 +1,119 @@
 <div class="page-shell min-h-dvh bg-stone-50 text-primary" dir="rtl">
   <div class="page-pattern" aria-hidden="true"></div>
+  <app-ambient-field />
+  <app-brand-header />
 
-  <header class="relative z-10 border-b border-primary/10 bg-white/90 shadow-sm backdrop-blur-sm">
-    <div class="mx-auto flex w-full max-w-4xl justify-center px-4 py-4 sm:px-6 sm:py-5">
-      <img class="h-auto w-full max-w-xl object-contain" src="/images/header.webp" alt="وزارة الطاقة - Ministry of Energy" />
-    </div>
-  </header>
-
-  <main class="relative z-10 mx-auto w-full max-w-3xl px-4 pb-36 pt-5 sm:px-6 sm:pt-8">
-    <section class="overflow-hidden rounded-3xl bg-primary px-5 py-7 text-center text-white shadow-xl sm:px-10 sm:py-10">
-      <p class="mb-3 text-sm font-bold tracking-wide text-[#d8c78f]">ثقافة الصحة والسلامة والبيئة</p>
-      <h1 class="text-2xl font-black leading-relaxed sm:text-4xl">كل يوم يبدأ ملايين الأشخاص عملهم</h1>
-      <div class="mx-auto my-5 h-1 w-14 rounded-full bg-[#c9b36e]"></div>
-      <p class="text-lg font-semibold leading-9 text-white/95 sm:text-2xl sm:leading-10">
-        لكن السؤال ليس: هل سيعود إلى منزله؟<br />
-        السؤال الحقيقي: ماذا فعلنا لنضمن عودته سالماً؟
+  <main class="page-main relative z-10 quiz-container">
+    <section class="hero-card anim-slide-up overflow-hidden rounded-3xl bg-primary px-5 py-5 text-center text-white shadow-xl sm:px-8 sm:py-6">
+      <p class="mb-1.5 text-xs font-bold tracking-wide text-[#d8c78f] sm:text-sm">وزارة الطاقة — معرض دمشق الدولي</p>
+      <h1 class="text-2xl font-black leading-snug sm:text-4xl">هل أنت بطل السلامة؟</h1>
+      <div class="mx-auto my-2.5 h-1 w-12 rounded-full bg-[#c9b36e]"></div>
+      <p class="mx-auto max-w-xl text-sm font-semibold leading-7 text-white/95 sm:text-lg sm:leading-8">
+        اختبر معلوماتك وتعلّم كيف تحمي نفسك وتحافظ على الطاقة والمياه والبيئة.
       </p>
-      <p class="mt-5 text-base leading-8 text-white/80 sm:text-lg">الصحة والسلامة والبيئة مسؤولية تبدأ من القرار.</p>
+
+      <div class="mx-auto mt-3 grid place-items-center">
+        <app-safety-animation type="welcome" size="md" label="بطل السلامة" />
+      </div>
+
+      <button
+        type="button"
+        class="cta-button anim-button-press mx-auto mt-4 flex min-h-12 w-full max-w-md items-center justify-center gap-2 rounded-2xl bg-[#c9b36e] px-6 py-3 text-base font-black text-primary shadow-lg sm:min-h-14 sm:text-lg"
+        (click)="openNameDialog()"
+      >
+        ابدأ تحدي السلامة
+        <svg aria-hidden="true" class="size-5 rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6" />
+        </svg>
+      </button>
     </section>
 
-    <div class="mt-5 space-y-5 sm:mt-7 sm:space-y-7">
-      <section class="content-card">
-        <p class="section-number">01</p>
-        <h2>لماذا السلامة المهنية؟</h2>
-        <p class="highlight-line">السلامة = حماية الإنسان + استمرارية العمل + إدارة المخاطر</p>
-        <p>الوقاية تبدأ قبل وقوع الحادث.</p>
-      </section>
-
-      <section class="content-card">
-        <p class="section-number">02</p>
-        <h2>إدارة المخاطر — لا تنتظر الحادث</h2>
-        <p>الإدارة الناجحة للسلامة لا تنتظر وقوع الحادث، بل تبحث عن أسباب حدوثه قبل أن يحدث.</p>
-      </section>
-
-      <section class="content-card">
-        <p class="section-number">03</p>
-        <h2>المدير هو نقطة البداية — الإدارة والقيادة</h2>
-        <p>ثقافة الصحة والسلامة والبيئة لا تُبنى بالملصقات وحدها؛ إنها تبدأ من الإدارة العليا.</p>
-      </section>
-
-      <section class="content-card">
-        <p class="section-number">04</p>
-        <h2>المخاطر ليست نوعاً واحداً</h2>
-        <div class="tag-list" aria-label="أنواع المخاطر">
-          <span>كيميائية</span><span>ميكانيكية</span><span>كهربائية</span><span>بيولوجية</span>
-          <span>فيزيائية</span><span>أرغونومية</span><span>نفسية واجتماعية</span>
-        </div>
-        <p class="mt-4">الصحة والسلامة والبيئة لا تحمي الجسد فقط، بل تحمي صحة الإنسان النفسية والجسدية.</p>
-      </section>
-
-      <section class="content-card">
-        <p class="section-number">05</p>
-        <h2>خطة الاستجابة في حال الطوارئ</h2>
-        <div class="process-list" aria-label="خطوات الاستجابة للطوارئ">
-          <span>حريق</span><b aria-hidden="true">←</b><span>إنذار</span><b aria-hidden="true">←</b>
-          <span>إخلاء</span><b aria-hidden="true">←</b><span>نقطة تجمع</span><b aria-hidden="true">←</b>
-          <span>مكافحة أولية</span><b aria-hidden="true">←</b><span>استجابة للطوارئ</span>
-        </div>
-        <p class="mt-4 font-bold">في الطوارئ لا يوجد وقت لاختراع اللحظة.</p>
-      </section>
-
-      <section class="content-card border-r-4 border-r-[#c9b36e]">
-        <p class="section-number">06</p>
-        <h2>العامل ليس جزءاً من المشكلة، بل جزء من الحل</h2>
-        <p>أبلغ عن الخطر قبل أن يتحول إلى حادث.</p>
-        <p class="mt-2">أحياناً يكون أهم حادث هو ذلك الذي لم يقع. العامل شريك في السلامة.</p>
-      </section>
-
-      <section class="content-card">
-        <p class="section-number">07</p>
-        <h2>من الحماية إلى التنبؤ</h2>
-        <div class="mt-4 grid gap-3 sm:grid-cols-3">
-          <div class="level-card"><span>01</span><strong>السلامة التقليدية</strong><p>تحمي من الخطر</p></div>
-          <div class="level-card"><span>02</span><strong>ثقافة السلامة</strong><p>تمنع الخطر</p></div>
-          <div class="level-card level-card-active"><span>03</span><strong>السلامة الذكية</strong><p>تتنبأ بالخطر قبل وقوعه</p></div>
-        </div>
-        <div class="mt-5 space-y-2 font-semibold leading-7">
-          <p>كل إجراء وقائي قد يحمي حياة.</p>
-          <p>كل قرار إداري يمنع حادثاً.</p>
-          <p>كل مؤسسة آمنة تبني مستقبلاً أكثر استدامة.</p>
-          <p class="text-[#8a6f1f]">بيئة عمل آمنة مسؤوليتنا جميعاً.</p>
-        </div>
-      </section>
-
-      <section class="content-card">
-        <p class="section-number">08</p>
-        <h2>دليل مبادئ الصحة والسلامة المهنية في مكان العمل</h2>
-        <ul class="safety-list">
-          <li>توفير بيئة عمل آمنة.</li>
-          <li>حماية العمال من الإصابات والأمراض المهنية.</li>
-          <li>الحفاظ على المعدات والممتلكات من التلف.</li>
-          <li>حماية الإنسان ومنع وقوع الحوادث والإصابات.</li>
-          <li>الالتزام القانوني وتطبيق اللوائح والأنظمة المحلية والدولية ذات الصلة.</li>
-          <li>نشر الوعي وثقافة السلامة وتدريب العاملين على طوارئ العمل.</li>
-          <li>فحص الآلات والأجهزة بانتظام لضمان سلامة تشغيلها.</li>
-          <li>الانتباه إلى أي عوامل أخرى قد تؤثر في سلامة بيئة العمل.</li>
-        </ul>
-      </section>
-
-      <section class="content-card">
-        <p class="section-number">09</p>
-        <h2>قواعد ذهبية للسلامة في بيئة العمل</h2>
-        <ul class="safety-list">
-          <li>ارتداء معدات الوقاية الشخصية (PPE) دائماً: خوذة، قفازات، نظارات، وحذاء أمان.</li>
-          <li>الالتزام بمخارج الطوارئ وعدم إغلاقها أو إعاقة الوصول إليها.</li>
-          <li>الإبلاغ الفوري عن أي عطل في المعدات أو تصرف غير آمن.</li>
-          <li>الامتناع التام عن التدخين أو تناول الطعام في مناطق العمل الخطرة.</li>
-          <li>معرفة مكان طفايات الحريق وطريقة استخدامها.</li>
-        </ul>
-      </section>
-
-      <section class="content-card">
-        <p class="section-number">10</p>
-        <h2>المخاطر الأكثر شيوعاً وكيفية تجنبها</h2>
-        <div class="mt-4 space-y-3">
-          <article class="risk-card">
-            <h3>المخاطر الفيزيائية</h3><p>ضوضاء، إضاءة ضعيفة، وحرارة عالية.</p>
-            <p><strong>الحل:</strong> استخدام واقيات الآذان وتحسين التهوية.</p>
-          </article>
-          <article class="risk-card">
-            <h3>المخاطر الميكانيكية</h3><p>التعامل مع الآلات والمعدات.</p>
-            <p><strong>الحل:</strong> التأكد من صيانة الآلات وعدم إزالة موانع الحماية.</p>
-          </article>
-          <article class="risk-card">
-            <h3>المخاطر التنظيمية</h3><p>الإرهاق وساعات العمل الطويلة.</p>
-            <p><strong>الحل:</strong> أخذ فترات راحة منتظمة.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="content-card">
-        <p class="section-number">11</p>
-        <h2>تعليمات الصحة والسلامة والبيئة للزائرين</h2>
-        <ul class="safety-list grid-list">
-          <li>ارتداء بطاقات التعريف.</li><li>الالتزام بالممرات المخصصة.</li>
-          <li>الامتناع عن التدخين.</li><li>وضع الهواتف على الوضع الصامت.</li>
-          <li>إلقاء النفايات في أماكنها المخصصة.</li><li>معرفة مخارج الطوارئ.</li>
-        </ul>
-      </section>
-    </div>
+    <section class="pillar-grid" aria-label="موضوعات التحدي">
+      <article class="pillar-card">
+        <app-safety-animation type="safety" size="sm" label="احمِ نفسك" />
+        <strong>احمِ نفسك</strong>
+      </article>
+      <article class="pillar-card">
+        <app-safety-animation type="water" size="sm" label="حافظ على المياه" />
+        <strong>حافظ على المياه</strong>
+      </article>
+      <article class="pillar-card">
+        <app-safety-animation type="electricity" size="sm" label="وفّر الطاقة" />
+        <strong>وفّر الطاقة</strong>
+      </article>
+      <article class="pillar-card">
+        <app-safety-animation type="environment" size="sm" label="احمِ بيئتك" />
+        <strong>احمِ بيئتك</strong>
+      </article>
+    </section>
   </main>
-
-  <div class="fixed inset-x-0 bottom-0 z-20 border-t border-primary/10 bg-white/90 p-4 shadow-[0_-8px_25px_rgba(0,38,35,0.12)] backdrop-blur-md">
-    <button type="button" class="mx-auto flex min-h-14 w-full max-w-md items-center justify-center gap-2 rounded-2xl bg-primary px-6 py-3 text-lg font-black text-white shadow-lg transition active:scale-[0.98] sm:hover:bg-[#063d38]" (click)="openNameDialog()">
-      اختبر سلامتك
-      <svg aria-hidden="true" class="size-5 rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6" /></svg>
-    </button>
-  </div>
 </div>
 
 @if (isNameDialogOpen()) {
   <div class="fixed inset-0 z-50 flex items-end justify-center p-0 sm:items-center sm:p-4" role="presentation">
-    <button type="button" class="absolute inset-0 bg-primary/75 backdrop-blur-sm" aria-label="إغلاق النافذة" [disabled]="isCheckingName()" (click)="closeNameDialog()"></button>
-    <section class="relative w-full rounded-t-3xl bg-white px-5 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-6 shadow-2xl sm:max-w-md sm:rounded-3xl sm:p-7" role="dialog" aria-modal="true" aria-labelledby="name-dialog-title" dir="rtl">
-      <button type="button" class="absolute left-4 top-4 grid size-10 place-items-center rounded-full bg-stone-100 text-primary transition hover:bg-stone-200 disabled:opacity-40" aria-label="إغلاق" [disabled]="isCheckingName()" (click)="closeNameDialog()">
-        <svg aria-hidden="true" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M6 6l12 12M18 6 6 18" /></svg>
+    <button
+      type="button"
+      class="absolute inset-0 bg-primary/75 backdrop-blur-sm"
+      aria-label="إغلاق النافذة"
+      [disabled]="isCheckingName()"
+      (click)="closeNameDialog()"
+    ></button>
+    <section
+      class="relative w-full rounded-t-3xl bg-white px-5 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-6 shadow-2xl sm:max-w-md sm:rounded-3xl sm:p-7"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="name-dialog-title"
+      dir="rtl"
+    >
+      <button
+        type="button"
+        class="absolute left-4 top-4 grid size-10 place-items-center rounded-full bg-stone-100 text-primary transition hover:bg-stone-200 disabled:opacity-40"
+        aria-label="إغلاق"
+        [disabled]="isCheckingName()"
+        (click)="closeNameDialog()"
+      >
+        <svg aria-hidden="true" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" d="M6 6l12 12M18 6 6 18" />
+        </svg>
       </button>
       <div class="mb-6 pl-11">
         <p class="mb-1 text-sm font-bold text-[#8a6f1f]">خطوة واحدة للبدء</p>
-        <h2 id="name-dialog-title" class="text-2xl font-black text-primary">ما اسمك؟</h2>
-        <p class="mt-2 leading-7 text-slate-600">أدخل اسمك للبدء باختبار السلامة.</p>
+        <h2 id="name-dialog-title" class="text-2xl font-black text-primary">ما اسمك يا بطل السلامة؟</h2>
+        <p class="mt-2 leading-7 text-slate-600">أدخل اسمك لبدء تحدي السلامة.</p>
       </div>
       <form #nameForm="ngForm" (ngSubmit)="startTest(nameForm)" novalidate>
         <label for="participant-name" class="mb-2 block text-sm font-bold text-primary">الاسم الكامل</label>
-        <input id="participant-name" name="participantName" type="text" class="min-h-14 w-full rounded-2xl border border-slate-300 bg-white px-4 text-base text-primary outline-none transition placeholder:text-slate-400 focus:border-primary focus:ring-4 focus:ring-primary/10 disabled:cursor-wait disabled:bg-slate-50" placeholder="اكتب اسمك هنا" autocomplete="name" required minlength="2" [disabled]="isCheckingName()" [(ngModel)]="participantName" #nameInput="ngModel" />
+        <input
+          id="participant-name"
+          name="participantName"
+          type="text"
+          class="min-h-14 w-full rounded-2xl border border-slate-300 bg-white px-4 text-base text-primary outline-none transition placeholder:text-slate-400 focus:border-primary focus:ring-4 focus:ring-primary/10 disabled:cursor-wait disabled:bg-slate-50"
+          placeholder="اكتب اسمك هنا"
+          autocomplete="name"
+          required
+          minlength="2"
+          [disabled]="isCheckingName()"
+          [(ngModel)]="participantName"
+          #nameInput="ngModel"
+        />
         @if (nameInput.invalid && nameInput.touched) {
           <p class="mt-2 text-sm font-semibold text-red-700">يرجى إدخال اسم صحيح للمتابعة.</p>
         }
         @if (requestError()) {
-          <p class="mt-3 rounded-xl bg-red-50 px-3 py-2 text-sm font-semibold leading-6 text-red-700" role="alert">{{ requestError() }}</p>
+          <p class="mt-3 rounded-xl bg-red-50 px-3 py-2 text-sm font-semibold leading-6 text-red-700" role="alert">
+            {{ requestError() }}
+          </p>
         }
-        <button type="submit" class="mt-5 flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-primary px-6 py-3 text-lg font-black text-white transition active:scale-[0.98] disabled:cursor-wait disabled:opacity-70" [disabled]="isCheckingName()">
+        <button
+          type="submit"
+          class="cta-button anim-button-press mt-5 flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-primary px-6 py-3 text-lg font-black text-white disabled:cursor-wait disabled:opacity-70"
+          [disabled]="isCheckingName()"
+        >
           @if (isCheckingName()) {
             <span class="size-5 animate-spin rounded-full border-2 border-white/35 border-t-white" aria-hidden="true"></span>
             جارٍ التحقق...
           } @else {
-            ابدأ الاختبار
+            ابدأ تحدي السلامة
           }
         </button>
       </form>

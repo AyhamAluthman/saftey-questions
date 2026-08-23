@@ -1,24 +1,36 @@
-import { Component, HostListener, inject, signal } from '@angular/core';
+import { Component, HostListener, OnInit, inject, signal } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { finalize, take } from 'rxjs';
 
 import { ApplicantService } from '../../core/services/applicant.service';
+import { AmbientFieldComponent } from '../../shared/components/ambient-field/ambient-field.component';
+import { BrandHeaderComponent } from '../../shared/components/brand-header/brand-header.component';
+import { SafetyAnimationComponent } from '../../shared/components/safety-animation/safety-animation.component';
 
 @Component({
   selector: 'app-personal-info-page',
-  imports: [FormsModule],
+  imports: [FormsModule, BrandHeaderComponent, SafetyAnimationComponent, AmbientFieldComponent],
   templateUrl: './personal-info.page.html',
   styleUrl: './personal-info.page.css'
 })
-export class PersonalInfoPage {
+export class PersonalInfoPage implements OnInit {
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly applicantService = inject(ApplicantService);
 
   protected readonly isNameDialogOpen = signal(false);
   protected readonly isCheckingName = signal(false);
   protected readonly requestError = signal<string | null>(null);
   protected participantName = '';
+
+  ngOnInit(): void {
+    if (this.route.snapshot.queryParamMap.get('restart') === '1') {
+      this.participantName = '';
+      this.openNameDialog();
+      void this.router.navigate(['/'], { replaceUrl: true });
+    }
+  }
 
   protected openNameDialog(): void {
     this.requestError.set(null);
