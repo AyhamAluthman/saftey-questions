@@ -89,7 +89,6 @@
         class="quiz-card"
         [class.question-leave]="transitionState() === 'leave'"
         [class.question-enter]="transitionState() === 'enter'"
-        [class.success-glow]="justSelected()"
       >
         <div class="mb-4 flex items-center justify-between gap-3">
           <div class="flex min-w-0 items-center gap-2">
@@ -109,7 +108,6 @@
             <label
               class="option-card"
               [class.option-selected]="isSelected(question.id, $index)"
-              [class.option-ripple]="justSelected() && isSelected(question.id, $index)"
             >
               <input
                 class="sr-only"

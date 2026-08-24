@@ -53,6 +53,8 @@ export class SafetyAnimationComponent implements OnDestroy {
   private observer: IntersectionObserver | null = null;
   private visible = true;
   private loadGeneration = 0;
+  private loadedType: AnimationType | null = null;
+  private static readonly animationCache = new Map<string, Record<string, unknown>>();
 
   constructor() {
     afterNextRender(() => this.viewReady.set(true));
@@ -72,21 +74,34 @@ export class SafetyAnimationComponent implements OnDestroy {
   }
 
   private async syncPlayer(): Promise<void> {
-    const generation = ++this.loadGeneration;
-    this.destroyPlayer();
-    this.useFallback.set(true);
-
-    if (!isPlatformBrowser(this.platformId) || this.reducedMotion()) {
+    const type = this.type();
+    if (this.animation && this.loadedType === type) {
       return;
     }
 
-    const spec = LOTTIE_ASSETS[this.type()];
-    if (!AVAILABLE_LOTTIE_FILES.includes(this.type())) {
+    const generation = ++this.loadGeneration;
+
+    if (!isPlatformBrowser(this.platformId) || this.reducedMotion()) {
+      this.destroyPlayer();
+      this.useFallback.set(true);
+      return;
+    }
+
+    const spec = LOTTIE_ASSETS[type];
+    if (!AVAILABLE_LOTTIE_FILES.includes(type)) {
+      this.destroyPlayer();
+      this.useFallback.set(true);
       return;
     }
 
     const animationData = await this.loadLocalAnimation(spec.path);
-    if (generation !== this.loadGeneration || !animationData) {
+    if (generation !== this.loadGeneration) {
+      return;
+    }
+
+    if (!animationData) {
+      this.destroyPlayer();
+      this.useFallback.set(true);
       return;
     }
 
@@ -101,6 +116,9 @@ export class SafetyAnimationComponent implements OnDestroy {
         return;
       }
 
+      this.useFallback.set(true);
+      this.destroyPlayer();
+
       const animation = lottie.loadAnimation({
         container: host,
         renderer: 'svg',
@@ -109,6 +127,7 @@ export class SafetyAnimationComponent implements OnDestroy {
         animationData
       });
       this.animation = animation;
+      this.loadedType = type;
 
       animation.addEventListener('DOMLoaded', () => {
         if (generation !== this.loadGeneration) {
@@ -125,6 +144,7 @@ export class SafetyAnimationComponent implements OnDestroy {
         if (generation === this.loadGeneration) {
           this.destroyPlayer();
           this.useFallback.set(true);
+          this.loadedType = null;
         }
       });
       this.observeVisibility();
@@ -132,13 +152,19 @@ export class SafetyAnimationComponent implements OnDestroy {
       if (generation === this.loadGeneration) {
         this.destroyPlayer();
         this.useFallback.set(true);
+        this.loadedType = null;
       }
     }
   }
 
   private async loadLocalAnimation(path: string): Promise<Record<string, unknown> | null> {
+    const cached = SafetyAnimationComponent.animationCache.get(path);
+    if (cached) {
+      return cached;
+    }
+
     try {
-      const response = await fetch(path, { cache: 'no-cache' });
+      const response = await fetch(path);
       if (!response.ok) {
         return null;
       }
@@ -148,7 +174,9 @@ export class SafetyAnimationComponent implements OnDestroy {
         return null;
       }
 
-      return JSON.parse(text) as Record<string, unknown>;
+      const data = JSON.parse(text) as Record<string, unknown>;
+      SafetyAnimationComponent.animationCache.set(path, data);
+      return data;
     } catch {
       return null;
     }
@@ -183,6 +211,7 @@ export class SafetyAnimationComponent implements OnDestroy {
   private destroyPlayer(): void {
     this.animation?.destroy();
     this.animation = null;
+    this.loadedType = null;
 
     if (!isPlatformBrowser(this.platformId)) {
       return;

@@ -42,14 +42,11 @@
   flex: 0 0 auto;
   place-items: center;
   border-radius: 999px;
-  background: transparent;
-  transition: transform 240ms ease, opacity 240ms ease;
+  background: #f4ead0;
 }
 
 .think-chip-done {
-  opacity: 0.55;
   background: #eef3f2;
-  transform: scale(0.92);
 }
 
 .progress-track {

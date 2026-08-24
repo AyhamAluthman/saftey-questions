@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 
 import { ApplicantService } from '../../core/services/applicant.service';
@@ -36,7 +36,11 @@ describe('PersonalInfoPage', () => {
           provide: ApplicantService,
           useValue: { checkByName: () => of({ data: existingResult }) }
         },
-        { provide: Router, useValue: { navigate } }
+        { provide: Router, useValue: { navigate } },
+        {
+          provide: ActivatedRoute,
+          useValue: { snapshot: { queryParamMap: { get: () => null } } }
+        }
       ]
     }).compileComponents();
   });

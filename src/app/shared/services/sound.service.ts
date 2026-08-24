@@ -20,7 +20,7 @@ export class SoundService {
       return;
     }
 
-    this.enabled.set(window.localStorage.getItem(STORAGE_KEY) === 'on');
+    this.enabled.set(window.localStorage.getItem(STORAGE_KEY) !== 'off');
   }
 
   prepare(): void {

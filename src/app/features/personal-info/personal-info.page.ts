@@ -3,6 +3,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize, take } from 'rxjs';
 
+import { clearQuizProgress, readQuizProgress } from '../../core/models/quiz-progress';
 import { ApplicantService } from '../../core/services/applicant.service';
 import { AmbientFieldComponent } from '../../shared/components/ambient-field/ambient-field.component';
 import { BrandHeaderComponent } from '../../shared/components/brand-header/brand-header.component';
@@ -71,12 +72,17 @@ export class PersonalInfoPage implements OnInit {
             sessionStorage.removeItem('safety-test-questions');
             sessionStorage.setItem('safety-test-result', JSON.stringify(response.data));
             sessionStorage.setItem('safety-test-result-source', 'existing');
+            clearQuizProgress();
             void this.router.navigate(['/result']);
             return;
           }
 
           sessionStorage.removeItem('safety-test-result');
           sessionStorage.removeItem('safety-test-result-source');
+          const storedProgress = readQuizProgress();
+          if (storedProgress && storedProgress.participantName !== name) {
+            clearQuizProgress();
+          }
           void this.router.navigate(['/questions']);
         },
         error: () => {

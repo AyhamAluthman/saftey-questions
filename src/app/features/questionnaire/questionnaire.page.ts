@@ -16,6 +16,11 @@ import {
   QuestionnaireItem,
   QuizAnswer
 } from '../../core/models/question.model';
+import {
+  clearQuizProgress,
+  readQuizProgress,
+  writeQuizProgress
+} from '../../core/models/quiz-progress';
 import { QuizService } from '../../core/services/quiz.service';
 import { AnimationType } from '../../shared/models/animation-type';
 import { AmbientFieldComponent } from '../../shared/components/ambient-field/ambient-field.component';
@@ -46,7 +51,6 @@ export class QuestionnairePage implements OnInit, OnDestroy {
   protected readonly submitError = signal<string | null>(null);
   protected readonly isSubmitting = signal(false);
   protected readonly transitionState = signal<'enter' | 'leave' | 'idle'>('enter');
-  protected readonly justSelected = signal(false);
   protected readonly celebrateProgress = signal(false);
   protected readonly participantName = signal('المتقدم');
 
@@ -76,7 +80,7 @@ export class QuestionnairePage implements OnInit, OnDestroy {
   );
 
   private transitionTimer: ReturnType<typeof setTimeout> | null = null;
-  private selectionTimer: ReturnType<typeof setTimeout> | null = null;
+  private enterTimer: ReturnType<typeof setTimeout> | null = null;
   private celebrateTimer: ReturnType<typeof setTimeout> | null = null;
   private isTransitioning = false;
 
@@ -121,7 +125,8 @@ export class QuestionnairePage implements OnInit, OnDestroy {
           }
 
           this.questions.set(items);
-          this.currentIndex.set(0);
+          this.restoreProgress(items);
+          this.markQuestionEntered();
         },
         error: () => {
           this.loadError.set('تعذر تحميل الأسئلة. يرجى التحقق من الاتصال والمحاولة مرة أخرى.');
@@ -133,14 +138,7 @@ export class QuestionnairePage implements OnInit, OnDestroy {
     this.answers.update((answers) => ({ ...answers, [questionId]: optionIndex }));
     this.validationMessage.set(null);
     this.submitError.set(null);
-    this.justSelected.set(true);
-    this.soundService.play('select');
-
-    if (this.selectionTimer) {
-      clearTimeout(this.selectionTimer);
-    }
-
-    this.selectionTimer = setTimeout(() => this.justSelected.set(false), 220);
+    this.persistProgress();
   }
 
   protected isSelected(questionId: number, optionIndex: number): boolean {
@@ -199,6 +197,7 @@ export class QuestionnairePage implements OnInit, OnDestroy {
           sessionStorage.setItem('safety-test-questions', JSON.stringify(this.questions()));
           sessionStorage.setItem('safety-test-result', JSON.stringify(result));
           sessionStorage.removeItem('safety-test-result-source');
+          clearQuizProgress();
           void this.router.navigate(['/result']);
         },
         error: (error: HttpErrorResponse) => {
@@ -219,10 +218,13 @@ export class QuestionnairePage implements OnInit, OnDestroy {
 
     const previousProgress = this.progress();
     const duration = this.animationService.questionTransitionMs();
+    this.soundService.play('select');
 
     if (duration === 0) {
       this.currentIndex.set(index);
       this.validationMessage.set(null);
+      this.transitionState.set('idle');
+      this.persistProgress();
       this.announceMilestone(previousProgress);
       this.scrollToTop();
       return;
@@ -234,11 +236,65 @@ export class QuestionnairePage implements OnInit, OnDestroy {
     this.transitionTimer = setTimeout(() => {
       this.currentIndex.set(index);
       this.validationMessage.set(null);
-      this.transitionState.set('enter');
+      this.persistProgress();
+      this.markQuestionEntered();
       this.isTransitioning = false;
       this.announceMilestone(previousProgress);
       this.scrollToTop();
     }, duration);
+  }
+
+  private markQuestionEntered(): void {
+    this.transitionState.set('enter');
+    if (this.enterTimer) {
+      clearTimeout(this.enterTimer);
+    }
+
+    const enterMs = this.animationService.questionTransitionMs() === 0 ? 0 : 360;
+    this.enterTimer = setTimeout(() => this.transitionState.set('idle'), enterMs);
+  }
+
+  private persistProgress(): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    writeQuizProgress({
+      participantName: this.participantName(),
+      answers: this.answers(),
+      currentIndex: this.currentIndex()
+    });
+  }
+
+  private restoreProgress(items: QuestionnaireItem[]): void {
+    if (!isPlatformBrowser(this.platformId) || items.length === 0) {
+      this.currentIndex.set(0);
+      return;
+    }
+
+    const progress = readQuizProgress();
+    if (!progress || progress.participantName !== this.participantName()) {
+      this.currentIndex.set(0);
+      return;
+    }
+
+    const questionIds = new Set(items.map((question) => question.id));
+    const restoredAnswers: Record<number, number> = {};
+
+    for (const [rawId, option] of Object.entries(progress.answers)) {
+      const questionId = Number(rawId);
+      if (questionIds.has(questionId) && Number.isInteger(option)) {
+        restoredAnswers[questionId] = option;
+      }
+    }
+
+    this.answers.set(restoredAnswers);
+
+    const maxIndex = items.length - 1;
+    const nextIndex = Number.isInteger(progress.currentIndex)
+      ? Math.min(Math.max(progress.currentIndex, 0), maxIndex)
+      : 0;
+    this.currentIndex.set(nextIndex);
   }
 
   private announceMilestone(previousProgress: number): void {
@@ -261,8 +317,8 @@ export class QuestionnairePage implements OnInit, OnDestroy {
     if (this.transitionTimer) {
       clearTimeout(this.transitionTimer);
     }
-    if (this.selectionTimer) {
-      clearTimeout(this.selectionTimer);
+    if (this.enterTimer) {
+      clearTimeout(this.enterTimer);
     }
     if (this.celebrateTimer) {
       clearTimeout(this.celebrateTimer);

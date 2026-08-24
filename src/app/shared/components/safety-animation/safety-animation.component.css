@@ -41,10 +41,17 @@
 .lottie-host {
   opacity: 0;
   pointer-events: none;
+  transition: opacity 160ms ease;
 }
 
 .lottie-host.is-active {
   opacity: 1;
+}
+
+.lottie-host svg {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .fallback svg {
@@ -68,21 +75,10 @@
   transform-origin: center;
 }
 
-.think-dots {
-  animation: softPulse 2.2s ease-in-out infinite;
+.think-bulb {
+  animation: thinkPulse 1.15s ease-in-out infinite;
   transform-origin: center;
 }
-
-.dot-a,
-.dot-b,
-.dot-c {
-  transform-box: fill-box;
-  transform-origin: center;
-}
-
-.dot-a { animation: thinkDot 1.05s 0s ease-in-out infinite; }
-.dot-b { animation: thinkDot 1.05s 0.18s ease-in-out infinite; }
-.dot-c { animation: thinkDot 1.05s 0.36s ease-in-out infinite; }
 
 .trophy-shine {
   animation: trophyShine 2.8s ease-in-out infinite;
@@ -94,12 +90,11 @@
   .hero-bob,
   .draw-check,
   .soft-pulse,
-  .think-dots,
-  .dot-a,
-  .dot-b,
-  .dot-c,
-  .trophy-shine {
+  .think-bulb,
+  .trophy-shine,
+  .lottie-host {
     animation: none;
+    transition: none;
     stroke-dashoffset: 0;
     filter: none;
   }
@@ -121,15 +116,13 @@
   }
 }
 
-@keyframes thinkDot {
+@keyframes thinkPulse {
   0%,
   100% {
-    transform: translateY(0) scale(0.86);
-    opacity: 0.55;
+    transform: scale(0.88);
   }
   50% {
-    transform: translateY(-7px) scale(1.12);
-    opacity: 1;
+    transform: scale(1.08);
   }
 }
 

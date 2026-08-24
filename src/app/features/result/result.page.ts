@@ -6,6 +6,7 @@ import {
   QuestionnaireItem,
   QuizAnswer
 } from '../../core/models/question.model';
+import { clearQuizProgress } from '../../core/models/quiz-progress';
 import { QuizResult } from '../../core/models/quiz-result.model';
 import { AmbientFieldComponent } from '../../shared/components/ambient-field/ambient-field.component';
 import { BrandHeaderComponent } from '../../shared/components/brand-header/brand-header.component';
@@ -125,6 +126,7 @@ export class ResultPage implements OnInit, OnDestroy {
     sessionStorage.removeItem('safety-test-result');
     sessionStorage.removeItem('safety-test-result-source');
     sessionStorage.removeItem('safety-test-participant-name');
+    clearQuizProgress();
   }
 
   protected startForNextPlayer(): void {
