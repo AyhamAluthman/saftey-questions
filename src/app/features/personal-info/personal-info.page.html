@@ -158,14 +158,19 @@
       </button>
       <div class="mb-6 pl-11">
         <p class="mb-1 text-sm font-bold text-[#8a6f1f]">خطوة واحدة للبدء</p>
-        <h2 id="name-dialog-title" class="text-2xl font-black text-primary">ما اسمك؟</h2>
-        <p class="mt-2 leading-7 text-slate-600">أدخل اسمك للبدء باختبار السلامة.</p>
+        <h2 id="name-dialog-title" class="text-2xl font-black text-primary">عرّفنا بنفسك</h2>
+        <p class="mt-2 leading-7 text-slate-600">أدخل اسمك وعمرك للبدء باختبار السلامة المناسب لك.</p>
       </div>
       <form #nameForm="ngForm" (ngSubmit)="startTest(nameForm)" novalidate>
         <label for="participant-name" class="mb-2 block text-sm font-bold text-primary">الاسم الكامل</label>
         <input id="participant-name" name="participantName" type="text" class="min-h-14 w-full rounded-2xl border border-slate-300 bg-white px-4 text-base text-primary outline-none transition placeholder:text-slate-400 focus:border-primary focus:ring-4 focus:ring-primary/10 disabled:cursor-wait disabled:bg-slate-50" placeholder="اكتب اسمك هنا" autocomplete="name" required minlength="2" [disabled]="isCheckingName()" [(ngModel)]="participantName" #nameInput="ngModel" />
         @if (nameInput.invalid && nameInput.touched) {
           <p class="mt-2 text-sm font-semibold text-red-700">يرجى إدخال اسم صحيح للمتابعة.</p>
+        }
+        <label for="participant-age" class="mb-2 mt-4 block text-sm font-bold text-primary">العمر</label>
+        <input id="participant-age" name="participantAge" type="number" class="min-h-14 w-full rounded-2xl border border-slate-300 bg-white px-4 text-base text-primary outline-none transition placeholder:text-slate-400 focus:border-primary focus:ring-4 focus:ring-primary/10 disabled:cursor-wait disabled:bg-slate-50" placeholder="أدخل عمرك" inputmode="numeric" required min="1" max="120" step="1" [disabled]="isCheckingName()" [(ngModel)]="participantAge" #ageInput="ngModel" />
+        @if (ageInput.invalid && ageInput.touched) {
+          <p class="mt-2 text-sm font-semibold text-red-700">يرجى إدخال عمر صحيح بين سنة واحدة و120 سنة.</p>
         }
         @if (requestError()) {
           <p class="mt-3 rounded-xl bg-red-50 px-3 py-2 text-sm font-semibold leading-6 text-red-700" role="alert">{{ requestError() }}</p>

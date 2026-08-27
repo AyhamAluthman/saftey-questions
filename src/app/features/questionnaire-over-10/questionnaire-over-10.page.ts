@@ -18,11 +18,11 @@ import {
 import { QuizService } from '../../core/services/quiz.service';
 
 @Component({
-  selector: 'app-questionnaire-page',
-  templateUrl: './questionnaire.page.html',
-  styleUrl: './questionnaire.page.css'
+  selector: 'app-questionnaire-over-10-page',
+  templateUrl: './questionnaire-over-10.page.html',
+  styleUrl: './questionnaire-over-10.page.css'
 })
-export class QuestionnairePage implements OnInit {
+export class QuestionnaireOver10Page implements OnInit {
   private readonly quizService = inject(QuizService);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly router = inject(Router);
@@ -35,7 +35,7 @@ export class QuestionnairePage implements OnInit {
   protected readonly validationMessage = signal<string | null>(null);
   protected readonly submitError = signal<string | null>(null);
   protected readonly isSubmitting = signal(false);
-  protected readonly participantAge = signal(10);
+  protected readonly participantAge = signal(11);
 
   protected readonly currentQuestion = computed(
     () => this.questions()[this.currentIndex()] ?? null
@@ -167,7 +167,7 @@ export class QuestionnairePage implements OnInit {
           sessionStorage.setItem('safety-test-questions', JSON.stringify(this.questions()));
           sessionStorage.setItem('safety-test-result', JSON.stringify(result));
           sessionStorage.removeItem('safety-test-result-source');
-          void this.router.navigate(['/result']);
+          void this.router.navigate(['/result-over-10']);
         },
         error: (error: HttpErrorResponse) => {
           const serverMessage =

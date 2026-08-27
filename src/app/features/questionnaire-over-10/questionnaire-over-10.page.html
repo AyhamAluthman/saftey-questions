@@ -1,0 +1,136 @@
+<div class="quiz-shell min-h-dvh bg-stone-50 text-primary" dir="rtl">
+  <div class="quiz-pattern" aria-hidden="true"></div>
+
+  <header class="relative z-10 border-b border-primary/10 bg-white/90 shadow-sm backdrop-blur-sm">
+    <div class="mx-auto flex w-full max-w-4xl justify-center px-4 py-3 sm:px-6 sm:py-5">
+      <img
+        class="h-auto w-full max-w-xl object-contain"
+        src="/images/header.webp"
+        alt="وزارة الطاقة - Ministry of Energy"
+      />
+    </div>
+  </header>
+
+  <main class="relative z-10 mx-auto w-full max-w-3xl px-4 pb-36 pt-5 sm:px-6 sm:pt-8">
+    @if (isLoading()) {
+      <section class="quiz-card" aria-live="polite" aria-busy="true">
+        <div class="mb-7 flex items-center justify-between">
+          <div class="h-6 w-32 animate-pulse rounded-full bg-primary/10"></div>
+          <div class="h-6 w-16 animate-pulse rounded-full bg-primary/10"></div>
+        </div>
+        <div class="h-7 w-5/6 animate-pulse rounded-lg bg-primary/10"></div>
+        <div class="mt-3 h-7 w-3/5 animate-pulse rounded-lg bg-primary/10"></div>
+        <div class="mt-8 space-y-3">
+          <div class="h-16 animate-pulse rounded-2xl bg-primary/10"></div>
+          <div class="h-16 animate-pulse rounded-2xl bg-primary/10"></div>
+        </div>
+        <p class="mt-7 text-center font-bold text-slate-500">جارٍ تحميل أسئلة الاختبار...</p>
+      </section>
+    } @else if (loadError()) {
+      <section class="quiz-card text-center" role="alert">
+        <div class="mx-auto grid size-16 place-items-center rounded-full bg-red-50 text-red-700">
+          <svg aria-hidden="true" class="size-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.3 3.7 2.8 17a2 2 0 0 0 1.7 3h15a2 2 0 0 0 1.7-3L13.7 3.7a2 2 0 0 0-3.4 0Z" />
+          </svg>
+        </div>
+        <h1 class="mt-4 text-2xl font-black">تعذر عرض الاختبار</h1>
+        <p class="mt-2 leading-7 text-slate-600">{{ loadError() }}</p>
+        <button type="button" class="mx-auto mt-6 flex min-h-12 w-full max-w-xs items-center justify-center rounded-xl bg-primary px-5 font-bold text-white" (click)="loadQuestions()">
+          إعادة المحاولة
+        </button>
+      </section>
+    } @else if (currentQuestion(); as question) {
+      <section class="mb-4 rounded-2xl border border-primary/10 bg-white/90 p-4 shadow-sm backdrop-blur-sm sm:p-5">
+        <div class="flex items-center justify-between gap-3">
+          <div>
+            <p class="text-xs font-bold text-slate-500">مرحباً، {{ participantName() }}</p>
+            <p class="mt-1 text-sm font-black text-primary">{{ question.categoryName }}</p>
+          </div>
+          <div class="shrink-0 rounded-full bg-primary px-3 py-1.5 text-sm font-black text-white">
+            {{ currentNumber() }} / {{ totalQuestions() }}
+          </div>
+        </div>
+
+        <div class="mt-4 h-2 overflow-hidden rounded-full bg-primary/10" role="progressbar" [attr.aria-valuenow]="currentNumber()" aria-valuemin="1" [attr.aria-valuemax]="totalQuestions()">
+          <div class="h-full rounded-full bg-[#b79a48] transition-[width] duration-300" [style.width.%]="progress()"></div>
+        </div>
+        <p class="mt-2 text-xs font-bold text-slate-500">تمت الإجابة عن {{ answeredCount() }} من {{ totalQuestions() }}</p>
+      </section>
+
+      <section class="quiz-card">
+        <div class="mb-5 flex items-center gap-2">
+          <span class="rounded-full bg-[#f1ead6] px-3 py-1 text-xs font-black text-[#725c1a]">سؤال {{ currentNumber() }}</span>
+          <span class="text-xs font-bold text-slate-400">اختر إجابة واحدة</span>
+        </div>
+
+        <h1 class="text-xl font-black leading-9 text-primary sm:text-2xl sm:leading-10">{{ question.question }}</h1>
+
+        <fieldset class="mt-7 space-y-3">
+          <legend class="sr-only">خيارات السؤال</legend>
+          @for (option of question.options; track $index) {
+            <label
+              class="option-card"
+              [class.option-selected]="isSelected(question.id, $index)"
+            >
+              <input
+                class="sr-only"
+                type="radio"
+                [name]="'question-' + question.id"
+                [value]="$index"
+                [checked]="isSelected(question.id, $index)"
+                [disabled]="isSubmitting()"
+                (change)="selectAnswer(question.id, $index)"
+              />
+              <span class="option-marker" aria-hidden="true">
+                @if (isSelected(question.id, $index)) {
+                  <span></span>
+                }
+              </span>
+              <span class="flex-1 text-base font-bold leading-7 sm:text-lg">{{ option }}</span>
+            </label>
+          }
+        </fieldset>
+
+        @if (validationMessage()) {
+          <p class="mt-5 rounded-xl bg-amber-50 px-4 py-3 text-sm font-bold text-amber-800" role="alert">{{ validationMessage() }}</p>
+        }
+        @if (submitError()) {
+          <p class="mt-5 rounded-xl bg-red-50 px-4 py-3 text-sm font-bold leading-6 text-red-700" role="alert">{{ submitError() }}</p>
+        }
+      </section>
+    }
+  </main>
+
+  @if (!isLoading() && !loadError() && currentQuestion()) {
+    <nav class="fixed inset-x-0 bottom-0 z-20 border-t border-primary/10 bg-white/92 px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-4 shadow-[0_-8px_25px_rgba(0,38,35,0.12)] backdrop-blur-md" aria-label="التنقل بين الأسئلة">
+      <div class="mx-auto flex w-full max-w-3xl gap-3">
+        <button
+          type="button"
+          class="flex min-h-14 flex-1 items-center justify-center gap-2 rounded-2xl border-2 border-primary px-4 font-black text-primary transition active:scale-[0.98] disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-300"
+          [disabled]="isFirstQuestion() || isSubmitting()"
+          (click)="previousQuestion()"
+        >
+          <svg aria-hidden="true" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6" /></svg>
+          السابق
+        </button>
+
+        @if (isLastQuestion()) {
+          <button type="button" class="flex min-h-14 flex-[1.5] items-center justify-center gap-2 rounded-2xl bg-[#9a8133] px-4 font-black text-white shadow-lg transition active:scale-[0.98] disabled:cursor-wait disabled:opacity-70" [disabled]="isSubmitting()" (click)="finishTest()">
+            @if (isSubmitting()) {
+              <span class="size-5 animate-spin rounded-full border-2 border-white/35 border-t-white" aria-hidden="true"></span>
+              جارٍ إرسال الاختبار...
+            } @else {
+              إنهاء الاختبار
+              <svg aria-hidden="true" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12.5 9.2 17 19 7" /></svg>
+            }
+          </button>
+        } @else {
+          <button type="button" class="flex min-h-14 flex-[1.5] items-center justify-center gap-2 rounded-2xl bg-primary px-4 font-black text-white shadow-lg transition active:scale-[0.98]" (click)="nextQuestion()">
+            التالي
+            <svg aria-hidden="true" class="size-5 rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6" /></svg>
+          </button>
+        }
+      </div>
+    </nav>
+  }
+</div>

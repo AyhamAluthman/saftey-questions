@@ -23,12 +23,16 @@ describe('QuizService', () => {
   });
 
   it('gets the complete quiz', () => {
-    service.getAllQuestions().subscribe((response) => {
+    service.getAllQuestions(25).subscribe((response) => {
       expect(response.data[0].questions[0].id).toBe(1);
     });
 
     const baseUrl = environment.apiBaseUrl.replace(/\/$/, '');
-    const request = httpTesting.expectOne(`${baseUrl}/api/questions`);
+    const request = httpTesting.expectOne(
+      (candidate) =>
+        candidate.url === `${baseUrl}/api/questions` &&
+        candidate.params.get('age') === '25'
+    );
 
     expect(request.request.method).toBe('GET');
     request.flush({

@@ -19,6 +19,7 @@ export class PersonalInfoPage {
   protected readonly isCheckingName = signal(false);
   protected readonly requestError = signal<string | null>(null);
   protected participantName = '';
+  protected participantAge: number | null = null;
 
   protected openNameDialog(): void {
     this.requestError.set(null);
@@ -40,6 +41,13 @@ export class PersonalInfoPage {
     }
 
     const name = this.participantName.trim();
+    const age = Number(this.participantAge);
+
+    if (!Number.isInteger(age) || age < 1 || age > 120) {
+      this.requestError.set('يرجى إدخال عمر صحيح بين سنة واحدة و120 سنة.');
+      return;
+    }
+
     this.requestError.set(null);
     this.isCheckingName.set(true);
 
@@ -52,6 +60,7 @@ export class PersonalInfoPage {
       .subscribe({
         next: (response) => {
           sessionStorage.setItem('safety-test-participant-name', name);
+          sessionStorage.setItem('safety-test-participant-age', String(age));
           this.isNameDialogOpen.set(false);
 
           if (response.data) {
@@ -59,13 +68,13 @@ export class PersonalInfoPage {
             sessionStorage.removeItem('safety-test-questions');
             sessionStorage.setItem('safety-test-result', JSON.stringify(response.data));
             sessionStorage.setItem('safety-test-result-source', 'existing');
-            void this.router.navigate(['/result']);
+            void this.router.navigate([age <= 10 ? '/result' : '/result-over-10']);
             return;
           }
 
           sessionStorage.removeItem('safety-test-result');
           sessionStorage.removeItem('safety-test-result-source');
-          void this.router.navigate(['/questions']);
+          void this.router.navigate([age <= 10 ? '/questions' : '/questions-over-10']);
         },
         error: () => {
           this.requestError.set('تعذر التحقق من الاسم. يرجى التأكد من الاتصال والمحاولة مرة أخرى.');

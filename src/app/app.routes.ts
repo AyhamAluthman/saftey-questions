@@ -22,5 +22,19 @@ export const routes: Routes = [
         (component) => component.ResultPage
       )
   },
+  {
+    path: 'questions-over-10',
+    loadComponent: () =>
+      import('./features/questionnaire-over-10/questionnaire-over-10.page').then(
+        (component) => component.QuestionnaireOver10Page
+      )
+  },
+  {
+    path: 'result-over-10',
+    loadComponent: () =>
+      import('./features/result-over-10/result-over-10.page').then(
+        (component) => component.ResultOver10Page
+      )
+  },
   { path: '**', redirectTo: '' }
 ];

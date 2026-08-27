@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -11,8 +11,10 @@ export class QuizService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = environment.apiBaseUrl.replace(/\/$/, '');
 
-  getAllQuestions(): Observable<FullQuizResponse> {
-    return this.http.get<FullQuizResponse>(`${this.baseUrl}/api/questions`);
+  getAllQuestions(age: number): Observable<FullQuizResponse> {
+    const params = new HttpParams().set('age', age);
+
+    return this.http.get<FullQuizResponse>(`${this.baseUrl}/api/questions`, { params });
   }
 
   submitQuiz(request: SubmitQuizRequest): Observable<QuizResult> {
