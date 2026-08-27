@@ -2,13 +2,38 @@
 
 @import 'tailwindcss';
 
+@font-face {
+  font-family: 'Qomra Arabic';
+  src: url('/fonts/itfQomraArabic-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Qomra Arabic';
+  src: url('/fonts/itfQomraArabic-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Qomra Arabic';
+  src: url('/fonts/itfQomraArabic-Bold.woff2') format('woff2');
+  font-weight: 600 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
   --color-primary: #002623;
+  --font-sans: 'Qomra Arabic', Tahoma, Arial, sans-serif;
 }
 
 html {
   background: #fafaf9;
-  font-family: Tahoma, Arial, sans-serif;
+  font-family: 'Qomra Arabic', Tahoma, Arial, sans-serif;
   scroll-behavior: smooth;
 }
 
@@ -16,9 +41,228 @@ body {
   min-width: 320px;
   min-height: 100dvh;
   margin: 0;
+  font-family: inherit;
 }
 
 button,
-input {
+input,
+textarea,
+select {
   font: inherit;
+}
+
+.quiz-container {
+  width: 100%;
+  max-width: 48rem;
+  margin-inline: auto;
+}
+
+.anim-fade-in {
+  animation: fadeIn 320ms ease both;
+}
+
+.anim-slide-up {
+  animation: slideUp 340ms ease both;
+}
+
+.anim-pulse-soft {
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+.anim-button-press:active {
+  animation: buttonPress 160ms ease;
+}
+
+.question-leave {
+  animation: questionLeave 280ms ease forwards;
+}
+
+.question-enter {
+  animation: questionEnter 340ms ease both;
+}
+
+.option-ripple::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: rgb(0 38 35 / 10%);
+  animation: ripple 220ms ease-out;
+  pointer-events: none;
+}
+
+.success-glow {
+  animation: successGlow 420ms ease;
+}
+
+.progress-move {
+  transition: width 320ms ease;
+}
+
+.badge-pop {
+  animation: badgePop 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.nav-ready {
+  animation: navReady 220ms ease both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes questionLeave {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes questionEnter {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03);
+  }
+}
+
+@keyframes buttonPress {
+  50% {
+    transform: scale(0.97);
+  }
+}
+
+@keyframes ripple {
+  from {
+    opacity: 0.35;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes successGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgb(201 179 110 / 0%);
+  }
+  40% {
+    box-shadow: 0 0 0 8px rgb(201 179 110 / 22%);
+  }
+  100% {
+    box-shadow: 0 12px 35px rgb(0 38 35 / 9%);
+  }
+}
+
+@keyframes badgePop {
+  from {
+    opacity: 0;
+    transform: scale(0.86);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes navReady {
+  from {
+    opacity: 0.65;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes progressCelebrate {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.08);
+  }
+}
+
+.progress-celebrate .progress-icon {
+  animation: progressCelebrate 560ms ease;
+}
+
+@media (min-width: 1440px) {
+  .quiz-container {
+    max-width: 52rem;
+  }
+
+  html {
+    font-size: 17px;
+  }
+}
+
+@media (min-width: 1920px) {
+  .quiz-container {
+    max-width: 56rem;
+  }
+
+  html {
+    font-size: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .anim-fade-in,
+  .anim-slide-up,
+  .anim-pulse-soft,
+  .question-leave,
+  .question-enter,
+  .option-ripple::after,
+  .success-glow,
+  .badge-pop,
+  .nav-ready,
+  .progress-celebrate .progress-icon,
+  .progress-move {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1;
+    transform: none;
+  }
 }

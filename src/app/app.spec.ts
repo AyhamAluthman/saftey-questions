@@ -25,6 +25,6 @@ describe('App', () => {
     fixture.detectChanges();
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('كل يوم يبدأ ملايين الأشخاص عملهم');
+    expect(compiled.querySelector('h1')?.textContent).toContain('هل أنت بطل السلامة؟');
   });
 });

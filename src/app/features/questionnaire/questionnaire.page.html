@@ -1,17 +1,9 @@
 <div class="quiz-shell min-h-dvh bg-stone-50 text-primary" dir="rtl">
   <div class="quiz-pattern" aria-hidden="true"></div>
+  <app-ambient-field />
+  <app-brand-header />
 
-  <header class="relative z-10 border-b border-primary/10 bg-white/90 shadow-sm backdrop-blur-sm">
-    <div class="mx-auto flex w-full max-w-4xl justify-center px-4 py-3 sm:px-6 sm:py-5">
-      <img
-        class="h-auto w-full max-w-xl object-contain"
-        src="/images/header.webp"
-        alt="وزارة الطاقة - Ministry of Energy"
-      />
-    </div>
-  </header>
-
-  <main class="relative z-10 mx-auto w-full max-w-3xl px-4 pb-36 pt-5 sm:px-6 sm:pt-8">
+  <main class="relative z-10 quiz-container quiz-main px-4 pt-5 sm:px-6 sm:pt-8">
     @if (isLoading()) {
       <section class="quiz-card" aria-live="polite" aria-busy="true">
         <div class="mb-7 flex items-center justify-between">
@@ -24,7 +16,7 @@
           <div class="h-16 animate-pulse rounded-2xl bg-primary/10"></div>
           <div class="h-16 animate-pulse rounded-2xl bg-primary/10"></div>
         </div>
-        <p class="mt-7 text-center font-bold text-slate-500">جارٍ تحميل أسئلة الاختبار...</p>
+        <p class="mt-7 text-center font-bold text-slate-500">جارٍ تحميل أسئلة التحدي...</p>
       </section>
     } @else if (loadError()) {
       <section class="quiz-card text-center" role="alert">
@@ -33,34 +25,79 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.3 3.7 2.8 17a2 2 0 0 0 1.7 3h15a2 2 0 0 0 1.7-3L13.7 3.7a2 2 0 0 0-3.4 0Z" />
           </svg>
         </div>
-        <h1 class="mt-4 text-2xl font-black">تعذر عرض الاختبار</h1>
+        <h1 class="mt-4 text-2xl font-black">تعذر عرض التحدي</h1>
         <p class="mt-2 leading-7 text-slate-600">{{ loadError() }}</p>
         <button type="button" class="mx-auto mt-6 flex min-h-12 w-full max-w-xs items-center justify-center rounded-xl bg-primary px-5 font-bold text-white" (click)="loadQuestions()">
           إعادة المحاولة
         </button>
       </section>
     } @else if (currentQuestion(); as question) {
-      <section class="mb-4 rounded-2xl border border-primary/10 bg-white/90 p-4 shadow-sm backdrop-blur-sm sm:p-5">
+      <section
+        class="mb-4 rounded-2xl border border-primary/10 bg-white/90 p-4 shadow-sm backdrop-blur-sm sm:p-5"
+        [class.progress-celebrate]="celebrateProgress()"
+      >
         <div class="flex items-center justify-between gap-3">
-          <div>
+          <div class="min-w-0">
             <p class="text-xs font-bold text-slate-500">مرحباً، {{ participantName() }}</p>
-            <p class="mt-1 text-sm font-black text-primary">{{ question.categoryName }}</p>
+            <div class="mt-1 flex items-center gap-2">
+              <app-safety-animation [type]="categoryAnimation()" size="sm" [label]="question.categoryName" />
+              <p class="text-sm font-black leading-6 text-primary">{{ question.categoryName }}</p>
+            </div>
           </div>
           <div class="shrink-0 rounded-full bg-primary px-3 py-1.5 text-sm font-black text-white">
-            {{ currentNumber() }} / {{ totalQuestions() }}
+            السؤال {{ currentNumber() }} من {{ totalQuestions() }}
           </div>
         </div>
 
-        <div class="mt-4 h-2 overflow-hidden rounded-full bg-primary/10" role="progressbar" [attr.aria-valuenow]="currentNumber()" aria-valuemin="1" [attr.aria-valuemax]="totalQuestions()">
-          <div class="h-full rounded-full bg-[#b79a48] transition-[width] duration-300" [style.width.%]="progress()"></div>
+        <div
+          class="progress-track mt-4"
+          role="progressbar"
+          [attr.aria-valuenow]="currentNumber()"
+          aria-valuemin="1"
+          [attr.aria-valuemax]="totalQuestions()"
+          [attr.aria-label]="'السؤال ' + currentNumber() + ' من ' + totalQuestions()"
+        >
+          <div class="progress-fill progress-move" [style.width.%]="progress()">
+          <span class="progress-icon" aria-hidden="true">
+            @switch (categoryVisual().icon) {
+              @case ('lightning') {
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z" /></svg>
+              }
+              @case ('drop') {
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3s7 8 7 12a7 7 0 1 1-14 0c0-4 7-12 7-12Z" /></svg>
+              }
+              @case ('leaf') {
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 19c8-1 13-8 14-15-8 2-14 8-14 15Zm0 0 7-7" /></svg>
+              }
+              @case ('flame') {
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3s2 4 2 7c3-2 5 1 4 4-1 4-6 6-8 2 0 0-2-2-1-5 1 1 2 1 3-1C11 8 12 3 12 3Z" /></svg>
+              }
+              @case ('road') {
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 4 21h16L12 3Zm0 6v5m0 3h.01" /></svg>
+              }
+              @default {
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 5 6v6c0 5 3 8 7 9 4-1 7-4 7-9V6l-7-3Z" /></svg>
+              }
+            }
+          </span>
+          </div>
         </div>
-        <p class="mt-2 text-xs font-bold text-slate-500">تمت الإجابة عن {{ answeredCount() }} من {{ totalQuestions() }}</p>
+        <p class="mt-3 text-xs font-bold text-slate-500">تمت الإجابة عن {{ answeredCount() }} من {{ totalQuestions() }}</p>
       </section>
 
-      <section class="quiz-card">
-        <div class="mb-5 flex items-center gap-2">
-          <span class="rounded-full bg-[#f1ead6] px-3 py-1 text-xs font-black text-[#725c1a]">سؤال {{ currentNumber() }}</span>
-          <span class="text-xs font-bold text-slate-400">اختر إجابة واحدة</span>
+      <section
+        class="quiz-card"
+        [class.question-leave]="transitionState() === 'leave'"
+        [class.question-enter]="transitionState() === 'enter'"
+      >
+        <div class="mb-4 flex items-center justify-between gap-3">
+          <div class="flex min-w-0 items-center gap-2">
+            <span class="rounded-full bg-[#f1ead6] px-3 py-1 text-xs font-black text-[#725c1a]">سؤال {{ currentNumber() }}</span>
+            <span class="text-xs font-bold text-slate-400">اختر إجابة واحدة</span>
+          </div>
+          <div class="think-chip" [class.think-chip-done]="hasAnsweredCurrent()">
+            <app-safety-animation type="thinking" size="sm" [loop]="true" label="فكّر قبل الاختيار" />
+          </div>
         </div>
 
         <h1 class="text-xl font-black leading-9 text-primary sm:text-2xl sm:leading-10">{{ question.question }}</h1>
@@ -83,7 +120,9 @@
               />
               <span class="option-marker" aria-hidden="true">
                 @if (isSelected(question.id, $index)) {
-                  <span></span>
+                  <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12.5 9.2 17 19 7" />
+                  </svg>
                 }
               </span>
               <span class="flex-1 text-base font-bold leading-7 sm:text-lg">{{ option }}</span>
@@ -103,7 +142,7 @@
 
   @if (!isLoading() && !loadError() && currentQuestion()) {
     <nav class="fixed inset-x-0 bottom-0 z-20 border-t border-primary/10 bg-white/92 px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-4 shadow-[0_-8px_25px_rgba(0,38,35,0.12)] backdrop-blur-md" aria-label="التنقل بين الأسئلة">
-      <div class="mx-auto flex w-full max-w-3xl gap-3">
+      <div class="quiz-container flex gap-3">
         <button
           type="button"
           class="flex min-h-14 flex-1 items-center justify-center gap-2 rounded-2xl border-2 border-primary px-4 font-black text-primary transition active:scale-[0.98] disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-300"
@@ -115,18 +154,29 @@
         </button>
 
         @if (isLastQuestion()) {
-          <button type="button" class="flex min-h-14 flex-[1.5] items-center justify-center gap-2 rounded-2xl bg-[#9a8133] px-4 font-black text-white shadow-lg transition active:scale-[0.98] disabled:cursor-wait disabled:opacity-70" [disabled]="isSubmitting()" (click)="finishTest()">
+          <button
+            type="button"
+            class="flex min-h-14 flex-[1.5] items-center justify-center gap-2 rounded-2xl bg-[#9a8133] px-4 font-black text-white shadow-lg transition active:scale-[0.98] disabled:cursor-wait disabled:opacity-70"
+            [class.nav-ready]="hasAnsweredCurrent() && !isSubmitting()"
+            [disabled]="isSubmitting()"
+            (click)="finishTest()"
+          >
             @if (isSubmitting()) {
               <span class="size-5 animate-spin rounded-full border-2 border-white/35 border-t-white" aria-hidden="true"></span>
-              جارٍ إرسال الاختبار...
+              جارٍ إرسال النتيجة...
             } @else {
-              إنهاء الاختبار
+              إنهاء التحدي
               <svg aria-hidden="true" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12.5 9.2 17 19 7" /></svg>
             }
           </button>
         } @else {
-          <button type="button" class="flex min-h-14 flex-[1.5] items-center justify-center gap-2 rounded-2xl bg-primary px-4 font-black text-white shadow-lg transition active:scale-[0.98]" (click)="nextQuestion()">
-            التالي
+          <button
+            type="button"
+            class="flex min-h-14 flex-[1.5] items-center justify-center gap-2 rounded-2xl bg-primary px-4 font-black text-white shadow-lg transition active:scale-[0.98]"
+            [class.nav-ready]="hasAnsweredCurrent()"
+            (click)="nextQuestion()"
+          >
+            السؤال التالي
             <svg aria-hidden="true" class="size-5 rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6" /></svg>
           </button>
         }

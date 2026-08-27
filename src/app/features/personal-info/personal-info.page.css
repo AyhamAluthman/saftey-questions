@@ -4,7 +4,19 @@
 
 .page-shell {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
   isolation: isolate;
+}
+
+.page-main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem 1rem;
 }
 
 .page-pattern {
@@ -18,180 +30,122 @@
   pointer-events: none;
 }
 
-.content-card {
+.hero-card {
   position: relative;
-  overflow: hidden;
+}
+
+.cta-button {
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.cta-button:hover {
+  transform: translateY(-1px);
+}
+
+.content-card,
+.pillar-card {
   border: 1px solid rgb(0 38 35 / 10%);
   border-radius: 1.5rem;
   background: rgb(255 255 255 / 92%);
-  padding: 1.25rem;
   box-shadow: 0 10px 30px rgb(0 38 35 / 7%);
   backdrop-filter: blur(5px);
 }
 
+.content-card {
+  padding: 1.25rem;
+}
+
 .content-card h2 {
-  padding-inline-end: 2.5rem;
   font-size: 1.2rem;
   font-weight: 900;
   line-height: 1.7;
 }
 
-.content-card > p:not(.section-number),
-.content-card li {
-  color: #334b49;
-  line-height: 1.9;
-}
-
-.section-number {
-  position: absolute;
-  inset-inline-end: 1.25rem;
-  top: 1.35rem;
-  color: #9a8133;
-  font-size: 0.75rem;
+.section-kicker {
+  margin-bottom: 0.4rem;
+  color: #8a6f1f;
+  font-size: 0.8rem;
   font-weight: 900;
-  letter-spacing: 0.08em;
 }
 
 .highlight-line {
-  margin-block: 1rem 0.5rem;
+  margin-block: 1rem 0;
   border-radius: 1rem;
   background: rgb(0 38 35 / 7%);
   padding: 0.9rem 1rem;
   font-weight: 800;
 }
 
-.tag-list,
-.process-list {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
-.tag-list span {
-  border: 1px solid rgb(0 38 35 / 12%);
-  border-radius: 999px;
-  background: #f6f3e9;
-  padding: 0.45rem 0.75rem;
-  color: #002623;
-  font-size: 0.85rem;
-  font-weight: 700;
-}
-
-.process-list span {
-  border-radius: 0.75rem;
-  background: #002623;
-  padding: 0.5rem 0.7rem;
-  color: white;
-  font-size: 0.8rem;
-  font-weight: 800;
-}
-
-.process-list b {
-  color: #a58b3d;
-}
-
-.level-card {
-  display: flex;
-  min-height: 8.5rem;
-  flex-direction: column;
-  justify-content: center;
-  border: 1px solid rgb(0 38 35 / 10%);
-  border-radius: 1rem;
-  background: #f8f8f5;
-  padding: 1rem;
-}
-
-.level-card span {
-  margin-bottom: 0.5rem;
-  color: #a58b3d;
-  font-size: 0.75rem;
-  font-weight: 900;
-}
-
-.level-card strong {
-  margin-bottom: 0.25rem;
-  font-weight: 900;
-}
-
-.level-card p {
-  color: #506360;
-  font-size: 0.9rem;
-}
-
-.level-card-active {
-  border-color: #002623;
-  background: #002623;
-  color: white;
-}
-
-.level-card-active p {
-  color: rgb(255 255 255 / 72%);
-}
-
-.safety-list {
+.pillar-grid {
   display: grid;
-  gap: 0.8rem;
-  margin-top: 1rem;
-  padding: 0;
-  list-style: none;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
 }
 
-.safety-list li {
-  position: relative;
-  padding-inline-start: 1.8rem;
-}
-
-.safety-list li::before {
-  content: '\2713';
-  position: absolute;
-  inset-inline-start: 0;
-  top: 0.35rem;
+.pillar-card {
   display: grid;
-  width: 1.2rem;
-  height: 1.2rem;
-  place-items: center;
-  border-radius: 999px;
-  background: #002623;
-  color: white;
-  font-size: 0.7rem;
-  line-height: 1;
+  justify-items: center;
+  min-height: 0;
+  padding: 0.65rem 0.4rem;
+  text-align: center;
 }
 
-.risk-card {
-  border-inline-start: 3px solid #c9b36e;
-  border-radius: 0.8rem;
-  background: #faf9f4;
-  padding: 1rem;
+.pillar-card app-safety-animation {
+  animation: iconPulse 1.8s ease-in-out infinite;
 }
 
-.risk-card h3 {
-  margin-bottom: 0.4rem;
+@keyframes iconPulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pillar-card app-safety-animation {
+    animation: none;
+  }
+}
+
+.pillar-card strong {
+  margin-top: 0.45rem;
+  font-size: 0.95rem;
   font-weight: 900;
 }
 
-.risk-card p {
+.pillar-card p {
+  margin-top: 0.3rem;
   color: #4b605e;
-  line-height: 1.75;
+  font-size: 0.82rem;
+  line-height: 1.6;
 }
 
 @media (min-width: 640px) {
+  .page-main {
+    gap: 1rem;
+    padding: 1rem 1.5rem 1.25rem;
+  }
+
+  .pillar-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
   .content-card {
     padding: 1.75rem;
   }
 
   .content-card h2 {
-    padding-inline-end: 3rem;
     font-size: 1.45rem;
   }
+}
 
-  .section-number {
-    inset-inline-end: 1.75rem;
-    top: 1.9rem;
-  }
-
-  .grid-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+@media (prefers-reduced-motion: reduce) {
+  .cta-button,
+  .cta-button:hover {
+    transition: none;
+    transform: none;
   }
 }

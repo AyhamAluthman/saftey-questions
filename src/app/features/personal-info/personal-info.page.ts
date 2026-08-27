@@ -1,18 +1,23 @@
-import { Component, HostListener, inject, signal } from '@angular/core';
+import { Component, HostListener, OnInit, inject, signal } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { finalize, take } from 'rxjs';
 
+import { clearQuizProgress, readQuizProgress } from '../../core/models/quiz-progress';
 import { ApplicantService } from '../../core/services/applicant.service';
+import { AmbientFieldComponent } from '../../shared/components/ambient-field/ambient-field.component';
+import { BrandHeaderComponent } from '../../shared/components/brand-header/brand-header.component';
+import { SafetyAnimationComponent } from '../../shared/components/safety-animation/safety-animation.component';
 
 @Component({
   selector: 'app-personal-info-page',
-  imports: [FormsModule],
+  imports: [FormsModule, BrandHeaderComponent, SafetyAnimationComponent, AmbientFieldComponent],
   templateUrl: './personal-info.page.html',
   styleUrl: './personal-info.page.css'
 })
-export class PersonalInfoPage {
+export class PersonalInfoPage implements OnInit {
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly applicantService = inject(ApplicantService);
 
   protected readonly isNameDialogOpen = signal(false);
@@ -20,6 +25,15 @@ export class PersonalInfoPage {
   protected readonly requestError = signal<string | null>(null);
   protected participantName = '';
   protected participantAge: number | null = null;
+
+  ngOnInit(): void {
+    if (this.route.snapshot.queryParamMap.get('restart') === '1') {
+      this.participantName = '';
+      this.participantAge = null;
+      this.openNameDialog();
+      void this.router.navigate(['/'], { replaceUrl: true });
+    }
+  }
 
   protected openNameDialog(): void {
     this.requestError.set(null);
@@ -68,12 +82,20 @@ export class PersonalInfoPage {
             sessionStorage.removeItem('safety-test-questions');
             sessionStorage.setItem('safety-test-result', JSON.stringify(response.data));
             sessionStorage.setItem('safety-test-result-source', 'existing');
+            clearQuizProgress();
             void this.router.navigate([age <= 10 ? '/result' : '/result-over-10']);
             return;
           }
 
           sessionStorage.removeItem('safety-test-result');
           sessionStorage.removeItem('safety-test-result-source');
+          const storedProgress = readQuizProgress();
+          if (
+            storedProgress &&
+            (storedProgress.participantName !== name || storedProgress.participantAge !== age)
+          ) {
+            clearQuizProgress();
+          }
           void this.router.navigate([age <= 10 ? '/questions' : '/questions-over-10']);
         },
         error: () => {

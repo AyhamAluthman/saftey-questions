@@ -1,0 +1,149 @@
+:host {
+  display: inline-grid;
+  place-items: center;
+}
+
+.anim-frame {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--anim-size, 7.5rem);
+  height: var(--anim-size, 7.5rem);
+}
+
+.anim-xs {
+  --anim-size: 2.45rem;
+}
+
+.anim-sm {
+  --anim-size: 3.25rem;
+}
+
+.anim-md {
+  --anim-size: 7.5rem;
+}
+
+.anim-lg {
+  --anim-size: 11rem;
+}
+
+.anim-xl {
+  --anim-size: 14rem;
+}
+
+.lottie-host,
+.fallback {
+  grid-area: 1 / 1;
+  width: 100%;
+  height: 100%;
+}
+
+.lottie-host {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms ease;
+}
+
+.lottie-host.is-active {
+  opacity: 1;
+}
+
+.lottie-host svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.fallback svg {
+  width: 100%;
+  height: 100%;
+}
+
+.hero-bob {
+  animation: heroBob 3.6s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.draw-check {
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: drawCheck 0.55s 0.12s ease forwards;
+}
+
+.soft-pulse {
+  animation: softPulse 2.2s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.think-bulb {
+  animation: thinkPulse 1.15s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.trophy-shine {
+  animation: trophyShine 2.8s ease-in-out infinite;
+  transform-origin: center;
+  filter: drop-shadow(0 8px 16px rgb(201 179 110 / 35%));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-bob,
+  .draw-check,
+  .soft-pulse,
+  .think-bulb,
+  .trophy-shine,
+  .lottie-host {
+    animation: none;
+    transition: none;
+    stroke-dashoffset: 0;
+    filter: none;
+  }
+}
+
+@keyframes heroBob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes drawCheck {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes thinkPulse {
+  0%,
+  100% {
+    transform: scale(0.88);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+@keyframes softPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.92;
+  }
+  50% {
+    transform: scale(1.04);
+    opacity: 1;
+  }
+}
+
+@keyframes trophyShine {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-6px) scale(1.04);
+  }
+}
