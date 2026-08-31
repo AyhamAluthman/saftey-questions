@@ -83,7 +83,7 @@ export class PersonalInfoPage implements OnInit {
             sessionStorage.setItem('safety-test-result', JSON.stringify(response.data));
             sessionStorage.setItem('safety-test-result-source', 'existing');
             clearQuizProgress();
-            void this.router.navigate([age <= 10 ? '/result' : '/result-over-10']);
+            void this.router.navigate([age <= 12 ? '/result' : '/result-over-10']);
             return;
           }
 
@@ -96,7 +96,7 @@ export class PersonalInfoPage implements OnInit {
           ) {
             clearQuizProgress();
           }
-          void this.router.navigate([age <= 10 ? '/questions' : '/questions-over-10']);
+          void this.router.navigate([age <= 12 ? '/questions' : '/questions-over-10']);
         },
         error: () => {
           this.requestError.set('تعذر التحقق من الاسم. يرجى التأكد من الاتصال والمحاولة مرة أخرى.');
